@@ -1,4 +1,4 @@
-
+// Populate dummy data for doctors
 // controllers/doctorsController.js
 const Doctor = require('../models/Doctor');
 
@@ -8,37 +8,56 @@ const populateDummyDoctors = async (req, res) => {
     const dummyDoctors = [
       {
         name: 'Javed Ansari',
-        email:"javedjonoansari1993@gmail.com",
+        email: 'javedjonoansari1993@gmail.com',
         specialization: 'Pediatrics',
         expertIssues: ['Childhood vaccinations', 'Common cold'],
-        availableSlots: [
-          { day: 'Monday', timeSlots: [{ selected: false, slots: '09:00 AM' }, { selected: false, slots: '10:00 AM' }, { selected: false, slots: '11:00 AM' }] },
-          { day: 'Tuesday', timeSlots: [{ selected: false, slots: '09:00 AM' }, { selected: false, slots: '10:00 AM' }, { selected: false, slots: '11:00 AM' }] },
-          { day: 'Wednesday', timeSlots: [{ selected: false, slots: '09:00 AM' }, { selected: false, slots: '10:00 AM' }, { selected: false, slots: '11:00 AM' }] },
-          { day: 'Thursday', timeSlots: [{ selected: false, slots: '09:00 AM' }, { selected: false, slots: '10:00 AM' }, { selected: false, slots: '11:00 AM' }] },
-          { day: 'Friday', timeSlots: [{ selected: false, slots: '09:00 AM' }, { selected: false, slots: '10:00 AM' }, { selected: false, slots: '11:00 AM' }] },
-        ],
+        availableSlots: generateTimeSlotsForMonth(),
       },
       {
         name: 'Jumma Ansari',
-        email:"jummaansari62@gmail.com",
+        email: 'jummaansari62@gmail.com',
         specialization: 'Cardiology',
         expertIssues: ['Heart disease', 'High blood pressure'],
-        availableSlots: [
-          { day: 'Monday', timeSlots: [{ selected: false, slots: '09:00 AM' }, { selected: false, slots: '10:00 AM' }, { selected: false, slots: '11:00 AM' }] },
-          { day: 'Tuesday', timeSlots: [{ selected: false, slots: '09:00 AM' }, { selected: false, slots: '10:00 AM' }, { selected: false, slots: '11:00 AM' }] },
-          { day: 'Wednesday', timeSlots: [{ selected: false, slots: '09:00 AM' }, { selected: false, slots: '10:00 AM' }, { selected: false, slots: '11:00 AM' }] },
-          { day: 'Thursday', timeSlots: [{ selected: false, slots: '09:00 AM' }, { selected: false, slots: '10:00 AM' }, { selected: false, slots: '11:00 AM' }] },
-          { day: 'Friday', timeSlots: [{ selected: false, slots: '09:00 AM' }, { selected: false, slots: '10:00 AM' }, { selected: false, slots: '11:00 AM' }] },
-        ],
+        availableSlots: generateTimeSlotsForMonth(),
       },
     ];
+
     await Doctor.insertMany(dummyDoctors);
     res.json({ message: 'Dummy doctors added successfully' });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: 'Server error' });
   }
 };
+
+// Generate time slots for a month excluding Sundays and Saturdays
+// Generate time slots for 30 days from the current date excluding Sundays and Saturdays
+const generateTimeSlotsForMonth = () => {
+  const availableSlots = [];
+  const currentDate = new Date();
+  const currentDatePointer = new Date(currentDate);
+  const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 29);
+  
+  while (currentDatePointer <= endDate) {
+    const currentDay = currentDatePointer.getDay();
+    if (currentDay !== 0 && currentDay !== 6) {
+      const dayString = currentDatePointer.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+      const daySlots = [
+        { selected: false, slots: '09:00 AM' },
+        { selected: false, slots: '10:00 AM' },
+        { selected: false, slots: '06:00 PM' },
+      ];
+      availableSlots.push({ date: dayString, timeSlots: daySlots });
+    }
+    currentDatePointer.setDate(currentDatePointer.getDate() + 1);
+  }
+  
+  return availableSlots;
+};
+
+
+// ... rest of the code ...
+
 
 // Get all doctors
 const getAllDoctors = async (req, res) => {
@@ -51,7 +70,7 @@ const getAllDoctors = async (req, res) => {
 };
 // Get doctor
 // GET /doctors/:id
-const getAllDoctor =  async (req, res) => {
+const getDoctorById =  async (req, res) => {
   try {
     const doctor = await Doctor.findById(req.params.id);
     if (!doctor) {
@@ -118,6 +137,6 @@ module.exports = {
   getAllDoctors,
   selectTimeSlot,
   getDoctorsWithSelectedSlots,
-  getAllDoctor,
+  getDoctorById,
   deleteAllDoctors
 };

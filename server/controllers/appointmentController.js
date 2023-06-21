@@ -11,7 +11,7 @@ const createAppointment = async (req, res) => {
     // Extract appointment data from request body
     const { patientName, patientId, doctorId, issue, dayName, time } = req.body;
     const selectDate = new Date(dayName);
-    const date = selectDate.toLocaleDateString("en-US", { weekday: "long" });
+    const date = selectDate.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
 
     // Fetch the doctor's name and email
     const doctorData = await Doctor.findById(doctorId);
@@ -46,7 +46,7 @@ const createAppointment = async (req, res) => {
 
     // Update the doctor's availableSlots to mark the selected time slot as booked (selected: true)
     const updatedDoctor = await Doctor.findOneAndUpdate(
-      { _id: doctorId, "availableSlots.day": date },
+      { _id: doctorId, "availableSlots.date": date },
       { $set: { "availableSlots.$.timeSlots.$[elem].selected": true } },
       { arrayFilters: [{ "elem.slots": time }], new: true }
     );

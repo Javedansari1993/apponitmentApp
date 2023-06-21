@@ -5,5 +5,6 @@ const router = express.Router();
 
 // POST request to add an appointment
 router.post("/", createAppointment);
+// router.delete("/", deleteAllAppointment)
 
 module.exports = router;

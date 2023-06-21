@@ -11,7 +11,7 @@ router.post('/dummy', doctorsController.populateDummyDoctors);
 router.get('/', doctorsController.getAllDoctors);
 
 // GET /doctor
-router.get('/:id', doctorsController.getAllDoctor);
+router.get('/:id', doctorsController.getDoctorById );
 
 // PUT /doctors/:id/timeSlots/:timeSlotId/select
 router.put('/:id/timeSlots/:timeSlotId/select', doctorsController.selectTimeSlot);

@@ -22,8 +22,8 @@ const doctorSchema = new Schema({
   },
   availableSlots: {
     type: [{
-      day: {
-        type: String,
+      date: {
+        type: String, // Change the type to Date
         required: true
       },
       timeSlots: {
