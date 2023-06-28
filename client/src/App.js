@@ -31,7 +31,7 @@ const App = () => {
   const fetchUserData = async (token) => {
     try {
       // Fetch the user's data from the backend using the provided token
-      const response = await fetch("http://localhost:5000/api/users/me", {
+      const response = await fetch("https://apponitment-app.vercel.app/api/users/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -53,7 +53,7 @@ const App = () => {
     try {
       // Make a POST request to the backend with the email and password
       // to log in the user
-      const response = await fetch("http://localhost:5000/api/users/login", {
+      const response = await fetch("https://apponitment-app.vercel.app/api/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +83,7 @@ const App = () => {
     try {
       // Make a POST request to the backend with the name, email, and password
       // to register a new user
-      const response = await fetch("http://localhost:5000/api/users/register", {
+      const response = await fetch("https://apponitment-app.vercel.app/api/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

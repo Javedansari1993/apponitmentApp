@@ -62,7 +62,7 @@ const TimeSlotList = ({
                         <li
                           className={`list-group-item rounded fw-bold text-white`}
                           onClick={() =>
-                            handleTimeSlotSelection(timeSlot.slots, slot.date)
+                            alert("please select date")
                           }>
                           {timeSlot.slots}
                         </li>

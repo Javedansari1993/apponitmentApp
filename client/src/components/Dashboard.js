@@ -19,14 +19,14 @@ const Dashboard = ({ user, setUser }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/doctors")
+      .get("https://apponitment-app.vercel.app/doctors")
       .then((response) => {
         setDoctors(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [appointment]);
 
   const handleDoctorChange = (event) => {
     setSelectedDoctor(event.target.value);
@@ -59,10 +59,10 @@ const Dashboard = ({ user, setUser }) => {
     setActiveSlot("");
   };
 
-  const handleTimeSlotSelection = (event, date) => {
+  const handleTimeSlotSelection = (event) => {
     setSelectedTimeSlot(event);
-    setActiveSlot(event);
-    setSelectedDate(date);
+    // setActiveSlot(event);
+    // setSelectedDate(date);
   };
 
   const handleCancelAppointment = () => {
@@ -74,7 +74,7 @@ const Dashboard = ({ user, setUser }) => {
     }
 
     axios
-      .delete(`http://localhost:5000/appointments/${appointmentId}`)
+      .delete(`https://apponitment-app.vercel.app/appointments/${appointmentId}`)
       .then((response) => {
         console.log("Appointment canceled!");
         // Clear the selected appointment details in the component state
@@ -99,7 +99,7 @@ const Dashboard = ({ user, setUser }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .post("http://localhost:5000/appointments", {
+      .post("https://apponitment-app.vercel.app/appointments", {
         patientId: user._id,
         patientName: user.name,
         doctorId: selectedDoctor,
@@ -110,18 +110,20 @@ const Dashboard = ({ user, setUser }) => {
       .then((response) => {
         const appointmentId = response.data.appointment._id;
         // Update the user object with the appointmentId
+        setAppointment(response.data)
         setUser((prevUser) => ({
           ...prevUser,
           appointmentId: appointmentId,
         }));
         console.log("Appointment booked!", response.data);
+        setActiveSlot(response.data)
       })
       .catch((error) => {
         console.error(error);
         setError(error.response.data.error);
       });
   };
-
+ console.log("user", user)
   const getDoctorById = (doctorId) => {
     return doctors.find((doctor) => doctor._id === doctorId);
   };
