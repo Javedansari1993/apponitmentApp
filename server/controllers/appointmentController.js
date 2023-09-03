@@ -150,4 +150,3 @@ module.exports = {
   createAppointment,
   cancelAppointment,
 };
-
