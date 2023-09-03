@@ -4,21 +4,12 @@ const Appointment = require("../models/Appointment");
 const Doctor = require("../models/Doctor")
 const User = require("../models/User")
 const nodemailer = require("nodemailer");
-const {validationResult} = require("express-validator")
 
 // POST /appointments
 const createAppointment = async (req, res) => {
   try {
-
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      return res.send({ errors: result.array() });
-    }
-
-
-
     // Extract appointment data from request body
-    const { patientName, patientId, doctorId, issue, dayName, time, slot, day } = req.body;
+    const { patientName, patientId, doctorId, issue, dayName, time } = req.body;
     const selectDate = new Date(dayName);
     const date = selectDate.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
 
@@ -46,10 +37,8 @@ const createAppointment = async (req, res) => {
       doctorId,
       doctorName, // Save the doctor's name
       issue,
-      date: selectDate,
+      date,
       time,
-      slot,
-      day
     });
 
     // Save the appointment to the database
@@ -93,7 +82,7 @@ const createAppointment = async (req, res) => {
 
     res.json({ message: "Appointment booked successfully", appointment: savedAppointment });
   } catch (error) {
-    res.status(500).json({ error: error.message});
+    res.status(500).json({ error: "Server error" });
   }
 };
 
@@ -150,4 +139,3 @@ module.exports = {
   createAppointment,
   cancelAppointment,
 };
-

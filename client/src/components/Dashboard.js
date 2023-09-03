@@ -19,7 +19,7 @@ const Dashboard = ({ user, setUser }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/doctors")
+      .get("https://apponitment-app.vercel.app")
       .then((response) => {
         setDoctors(response.data);
       })
@@ -74,7 +74,7 @@ const Dashboard = ({ user, setUser }) => {
     }
 
     axios
-      .delete(`http://localhost:5000/${appointmentId}`)
+      .delete(`https://apponitment-app.vercel.app/appointments/${appointmentId}`)
       .then((response) => {
         console.log("Appointment canceled!");
         // Clear the selected appointment details in the component state
@@ -99,7 +99,7 @@ const Dashboard = ({ user, setUser }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .post("/appointment", {
+      .post("https://apponitment-app.vercel.app/appointments", {
         patientId: user._id,
         patientName: user.name,
         doctorId: selectedDoctor,
