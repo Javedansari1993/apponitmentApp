@@ -32,14 +32,14 @@ const TimeSlotList = ({
                 <li
                   className={`list-group-item rounded fw-bold text-white ${
                     timeSlot.selected || timeSlot.slots === activeSlot
-                      ? "d-none"
+                      ? " disabled"
                       : ""
                   } ${
                     timeSlot.slots.includes("AM")
                       ? "time-slot-am"
                       : "time-slot-pm"
                   }`}
-                  onClick={() => handleTimeSlotSelection(timeSlot.slots)}
+                  onClick={() => handleTimeSlotSelection(timeSlot)}
                   key={timeSlot._id}>
                   {timeSlot.slots}
                 </li>
@@ -49,7 +49,7 @@ const TimeSlotList = ({
           {doctorData && !selectedDate && (
             <>
               <h2 className="align-self-center">Available Time Slots</h2>
-              {doctorData.availableSlots.map((slot) => (
+              {doctorData.newSlots.map((slot) => (
                 <div key={slot.date}>
                   <h5 className="mx-5 my-4">{slot.date}</h5>
                   <div className="row">
