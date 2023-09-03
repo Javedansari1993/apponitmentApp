@@ -144,27 +144,8 @@ const Dashboard = ({ user, setUser }) => {
       });
       // console.log("dayName", dayName )
       const selectedIssueObj = doctor.newSlots.find(
-        (slot) => slot.date === dayName
-      );
-      // console.log(selectedIssueObj)
-      if (selectedIssueObj) {
-        return selectedIssueObj.timeSlots.map((timeSlot) => timeSlot);
-      }
-    }
-    return [];
-  };
-
-  //   const doctorData = getDoctorById(selectedDoctor);
-  const isWeekend = (date) => {
-    const day = date.getDay();
-    return day === 0 || day === 6; // 0 represents Sunday, 6 represents Saturday
-  };
-  // console.log("doctor", doctorData)
-  //  console.log("date",selectedDate)
-
-  return (
-    <div className="container mt-5">
-      <form className="mt-4" onSubmit={handleSubmit}>
+find(className="mt-4", onSubmit={handleSubmit}>
+     <div>
         <Card>
           <div className="row justify-content-around">
             <DoctorSelect
@@ -224,7 +205,7 @@ const Dashboard = ({ user, setUser }) => {
         </div>
       </form>
     </div>
-  );
+    )
 };
 
 export default Dashboard;
