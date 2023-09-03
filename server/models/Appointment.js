@@ -7,8 +7,11 @@ const appointmentSchema = new mongoose.Schema({
     doctorName: String,
     patientName: String,
     issue: String,
-    date: String,
+    date: Date,
     time: String,
+    day: Number,
+    slot: Number,
+
 });
 
 const Appointment = mongoose.model("Appointment", appointmentSchema);
