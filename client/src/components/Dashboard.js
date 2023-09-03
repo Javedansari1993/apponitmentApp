@@ -5,8 +5,6 @@ import IssueSelect from "./IssueSelect";
 import DateInput from "./DateInput";
 import TimeSlotList from "./TimeSlotList";
 import Card from "./UI/Card";
-import myAxios from "../my-axios";
-import moment from "moment";
 
 const Dashboard = ({ user, setUser }) => {
   const [doctors, setDoctors] = useState([]);
@@ -20,8 +18,8 @@ const Dashboard = ({ user, setUser }) => {
   // const [appointmentId, setAppointmentId] = useState(null);
 
   useEffect(() => {
-    myAxios
-      .get("doctors")
+    axios
+      .get("http://localhost:5000/doctors")
       .then((response) => {
         setDoctors(response.data);
       })
@@ -63,7 +61,7 @@ const Dashboard = ({ user, setUser }) => {
 
   const handleTimeSlotSelection = (event) => {
     setSelectedTimeSlot(event);
-    setActiveSlot(event);
+    // setActiveSlot(event);
     // setSelectedDate(date);
   };
 
@@ -76,7 +74,7 @@ const Dashboard = ({ user, setUser }) => {
     }
 
     axios
-      .delete(`https://apponitment-app.vercel.app/appointments/${appointmentId}`)
+      .delete(`http://localhost:5000/${appointmentId}`)
       .then((response) => {
         console.log("Appointment canceled!");
         // Clear the selected appointment details in the component state
@@ -99,18 +97,15 @@ const Dashboard = ({ user, setUser }) => {
   };
 
   const handleSubmit = (event) => {
-    console.log('selected date', selectedDate)
     event.preventDefault();
-    myAxios
-      .post("appointments", {
+    axios
+      .post("/appointment", {
         patientId: user._id,
         patientName: user.name,
         doctorId: selectedDoctor,
         issue: selectedIssue,
-        dayName: moment(selectedDate).toLocaleString(),
-        time: selectedTimeSlot.slots,
-        slot: selectedTimeSlot.slot,
-        day: moment(selectedDate).day()
+        dayName: selectedDate,
+        time: selectedTimeSlot,
       })
       .then((response) => {
         const appointmentId = response.data.appointment._id;
@@ -121,13 +116,14 @@ const Dashboard = ({ user, setUser }) => {
           appointmentId: appointmentId,
         }));
         console.log("Appointment booked!", response.data);
+        setActiveSlot(response.data)
       })
       .catch((error) => {
         console.error(error);
         setError(error.response.data.error);
       });
   };
-//  console.log("user", user)
+ console.log("user", user)
   const getDoctorById = (doctorId) => {
     return doctors.find((doctor) => doctor._id === doctorId);
   };
@@ -143,9 +139,28 @@ const Dashboard = ({ user, setUser }) => {
         year: "numeric",
       });
       // console.log("dayName", dayName )
-      const selectedIssueObj = doctor.newSlots.find(
-find(className="mt-4", onSubmit={handleSubmit}>
-     <div>
+      const selectedIssueObj = doctor.availableSlots.find(
+        (slot) => slot.date === dayName
+      );
+      // console.log(selectedIssueObj)
+      if (selectedIssueObj) {
+        return selectedIssueObj.timeSlots.map((timeSlot) => timeSlot);
+      }
+    }
+    return [];
+  };
+
+  //   const doctorData = getDoctorById(selectedDoctor);
+  const isWeekend = (date) => {
+    const day = date.getDay();
+    return day === 0 || day === 6; // 0 represents Sunday, 6 represents Saturday
+  };
+  // console.log("doctor", doctorData)
+  //  console.log("date",selectedDate)
+
+  return (
+    <div className="container mt-5">
+      <form className="mt-4" onSubmit={handleSubmit}>
         <Card>
           <div className="row justify-content-around">
             <DoctorSelect
@@ -205,7 +220,7 @@ find(className="mt-4", onSubmit={handleSubmit}>
         </div>
       </form>
     </div>
-    )
+  );
 };
 
 export default Dashboard;
